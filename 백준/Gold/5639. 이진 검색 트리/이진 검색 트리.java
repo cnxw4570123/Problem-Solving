@@ -1,12 +1,15 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 
 public class Main {
     static String input;
+    static StringBuilder ans = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
-//        System.setIn(Files.newInputStream(Paths.get("src/input.txt")));
+        // System.setIn(Files.newInputStream(Paths.get("src/input.txt")));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         Node root = new Node(Integer.parseInt(br.readLine()), null);
@@ -16,6 +19,7 @@ public class Main {
             root.insert(root, data);
         }
         postOrder(root);
+        System.out.println(ans);
         br.close();
     }
 
@@ -23,7 +27,7 @@ public class Main {
         if(current == null) return;
         postOrder(current.left);
         postOrder(current.right);
-        System.out.println(current.data);
+        ans.append(current.data).append("\n");
     }
 }
 
