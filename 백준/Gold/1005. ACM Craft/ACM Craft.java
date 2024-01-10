@@ -39,7 +39,6 @@ public class Main {
                 inDegree[y]++;
             }
             for (int i = 1; i < N + 1; i++) {
-                ans[i] = time[i];
                 if (inDegree[i] == 0) {
                     q.add(i);
                 }
@@ -55,7 +54,7 @@ public class Main {
     static int topologySort(int w) {
         while (!q.isEmpty()) {
             int current = q.poll();
-
+            ans[current] = Math.max(ans[current], time[current]);
             for (int next : graph[current]) {
                 inDegree[next]--;
                 ans[next] = Math.max(ans[next], ans[current] + time[next]);
