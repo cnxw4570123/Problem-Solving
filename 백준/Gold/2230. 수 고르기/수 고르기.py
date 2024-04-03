@@ -1,5 +1,4 @@
 import sys
-import bisect
 
 # print = sys.stdout.write
 input = sys.stdin.readline
@@ -13,15 +12,17 @@ arr.sort()
 
 def main():
     ans = sys.maxsize
-    for i in range(N - 1):
-        idx = bisect.bisect_left(arr, arr[i] + M, i + 1)
-        if idx >= N:
-            continue
-        if arr[idx] - arr[i] == M:
-            ans = M
-            break
-        elif arr[idx] - arr[i] > M:
-            ans = min(ans, arr[idx] - arr[i])
+    start, end = 0, 0
+    while start <= end and end < N:
+        gap = arr[end] - arr[start]
+        if gap == M:
+            print(M)
+            return
+        if gap > M:
+            ans = min(ans, gap)
+            start += 1
+        else:
+            end += 1
     print(ans)
 
 
