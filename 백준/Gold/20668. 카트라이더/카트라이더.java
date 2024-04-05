@@ -9,11 +9,13 @@ public class Main {
     static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     static final long INF = Long.MAX_VALUE;
     static final long MULTIPLY = 3628800L;
+    static final long CORRECTION = 1_000_000_000;
 
     static class Edge {
-        int to, length, constraint;
+        int to, constraint;
+        long length;
 
-        public Edge(int to, int length, int constraint) {
+        public Edge(int to, long length, int constraint) {
             this.to = to;
             this.length = length;
             this.constraint = constraint;
@@ -58,30 +60,24 @@ public class Main {
             int b = Integer.parseInt(st.nextToken());
             int l = Integer.parseInt(st.nextToken());
             int k = Integer.parseInt(st.nextToken());
-            graph[a].add(new Edge(b, l, k));
-            graph[b].add(new Edge(a, l, k));
+            graph[a].add(new Edge(b, l * MULTIPLY, k));
+            graph[b].add(new Edge(a, l * MULTIPLY, k));
         }
         dijkstra();
 
         for (int i = 1; i < 11; i++) {
             ans = Math.min(ans, dist[i][N]);
         }
-        BigDecimal bigDecimal = new BigDecimal(ans);
-        BigDecimal div1 = new BigDecimal(MULTIPLY);
-        BigDecimal divide = bigDecimal.divide(div1, 9, RoundingMode.HALF_UP);
-        bw.write(divide.toString());
+        bw.write(ans / MULTIPLY +"");
+        bw.write(String.format("%.9f",((double)ans % MULTIPLY)/ MULTIPLY).substring(1));
+//        bw.write((double) ans / MULTIPLY + "\n");
+//        bw.write(divide.toString());
 
         bw.flush();
         bw.close();
         br.close();
     }
 
-    static long round(long target){
-        if(target % 10 >= 5){
-            return target / 10 + 1;
-        }
-        return target / 10;
-    }
     static void dijkstra() {
         PriorityQueue<Route> pq = new PriorityQueue<>(Comparator.comparingLong(route -> route.time));
         pq.add(new Route(1, 0, 1));
@@ -97,8 +93,7 @@ public class Main {
                     if (nv > next.constraint || nv < 1) {
                         continue;
                     }
-                    long cost = (next.length * MULTIPLY) / nv;
-                    long nextTime = current.time + cost;
+                    long nextTime = current.time + (next.length / nv);
                     if (nextTime >= dist[nv][next.to]) {
                         continue;
                     }
