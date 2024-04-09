@@ -1,14 +1,16 @@
 import sys
-from collections import deque
-
 
 # print = sys.stdout.write
 input = sys.stdin.readline
 # f = open("input.txt", "rt")
 # input = f.readline
 DIRECTIONS = ((0, 1), (0, -1), (-1, 0), (1, 0))  # 동서북남
-ORG = [(0, 2, 5, 3), (0, 1, 5, 4)]
-ROLLING = [(2, 5, 3, 0), (3, 0, 2, 5), (1, 5, 4, 0), (4, 0, 1, 5)]
+ROLLING = [
+    ((1, 3), (3, 6), (6, 4), (4, 1)),
+    ((1, 4), (3, 1), (6, 3), (4, 6)),
+    ((1, 5), (2, 1), (6, 2), (5, 6)),
+    ((1, 2), (2, 6), (6, 5), (5, 1)),
+]
 
 N, M, y, x, K = map(int, input().split())
 maps = [list(map(int, input().split())) for _ in range(N)]
@@ -25,9 +27,9 @@ def main():
         ny, nx = y + DIRECTIONS[move - 1][0], x + DIRECTIONS[move - 1][1]
         if ny >= N or nx >= M or ny < 0 or nx < 0:
             continue
-        roll(move - 1, dice)
+        dice = roll(move - 1, dice)
 
-        if maps[ny][nx]:  # 0이 아닌 칸 -> 바닥면으로 복사
+        if maps[ny][nx]:
             dice[5] = maps[ny][nx]
             maps[ny][nx] = 0
         else:
@@ -39,12 +41,10 @@ def main():
 
 
 def roll(dir, dice):
-    next_dice = deque()
-    for idx in ORG[dir // 2]:
-        next_dice.append(dice[idx])
-
-    for i in range(4):
-        dice[ROLLING[dir][i]] = next_dice[i]
+    next_dice = list(dice)
+    for current, next in ROLLING[dir]:
+        next_dice[next - 1] = dice[current - 1]
+    return next_dice
 
 
 if __name__ == "__main__":
