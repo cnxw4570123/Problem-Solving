@@ -28,8 +28,6 @@ priority = [[]] + [
     [list(map(int, input().split())) for _ in range(4)] for _ in range(M)
 ]
 
-removed = set()
-
 
 def main():
     ans = proceed()
@@ -43,8 +41,6 @@ def proceed():
         q_size = len(sharks)
         for _ in range(q_size):
             y, x, num, dir = sharks.pop(0)
-            # if num in removed:
-            #     continue
             move(y, x, num, dir, priority[num])
         set_pheromones()
     return t
@@ -72,7 +68,6 @@ def move(y, x, num, dir, priority):
     ny, nx, ndir = res
     # 만약 해당 칸에 있는 상어가 더 작은 숫자면
     if ocean[ny][nx] and ocean[ny][nx] < num:
-        removed.add(num)
         return
 
     # 해당 칸에 있는 상어보다 현재 상어가 더 작은 숫자면
@@ -81,7 +76,6 @@ def move(y, x, num, dir, priority):
             if shark[2] == ocean[ny][nx]:
                 sharks.remove(shark)
                 break
-        removed.add(ocean[ny][nx])
 
     ocean[ny][nx] = num
     sharks.append((ny, nx, num, ndir))
