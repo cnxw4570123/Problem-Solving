@@ -11,15 +11,13 @@ MAX_STEP, INF = 141, float("inf")
 N, M = map(int, input().split())
 small_stones = set()  # 밟을 수 없는 칸
 
-# dp[a][b] = c, a칸을 점프해서 b로 가는 방법은 c개이다
+# dp[a][b] = c, a칸을 점프해서 b칸으로 가는 최소 움직임은 c번이다
 dp = [[INF] * (N + 1) for _ in range(MAX_STEP + 1)]
 
 
 def main():
-    for _ in range(M):
-        small_stones.add(int(input().rstrip()))
-    # while row := input().split():
-    #     small_stones.update(map(int, row))
+    while row := input().split():
+        small_stones.update(map(int, row))
     if 2 not in small_stones:
         dp[1][2] = 1  # 1번째 돌에서 1칸을 움직인 상태로 2번째 돌로 이동
 
