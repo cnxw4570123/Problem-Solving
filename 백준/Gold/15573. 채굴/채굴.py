@@ -47,13 +47,13 @@ def bfs(d):
 
 start, end = 1, 10**6
 min_d = end
-while start <= end:
+while start < end:
     mid = (start + end) // 2
     my_k = bfs(mid)
 
     if my_k >= k:
         min_d = min(min_d, mid)
-        end = mid - 1
+        end = mid
     else:
         start = mid + 1
 
