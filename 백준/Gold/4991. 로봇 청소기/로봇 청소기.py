@@ -11,9 +11,7 @@ input = sys.stdin.readline
 INF = float("inf")
 DIRECTIONS = (-1, 0), (1, 0), (0, -1), (0, 1)
 
-
 dust_cnt = 0
-cost = INF
 
 
 def init(W, H, _map, vacuum_and_dusts):
@@ -36,7 +34,6 @@ def BFS(H, W, _map, dists, start):
     v = [[False] * W for _ in range(H)]
 
     v[start[0]][start[1]] = True
-    dists[start[2]][start[2]] = 0
     q = deque([(start[0], start[1])])
 
     t = 0
@@ -62,27 +59,27 @@ def BFS(H, W, _map, dists, start):
                 q.append((ny, nx))
                 v[ny][nx] = True
                 if _map[ny][nx].isnumeric():
-                    dists[start[2]][int(_map[ny][nx])] = t
+                    dists[start[2]][(1 << int(_map[ny][nx]))] = t
 
 
-def calc_min_dist(dists: list, idx: int, v: int, move):
-    global cost
+def calc_min_dist(dp: list, idx: int, v: int):
     if v == (1 << dust_cnt) - 1:
-        cost = min(cost, move)
-        return
+        return 0
+
+    if dp[idx][v] != INF:
+        return dp[idx][v]
+
+    tmp = INF
     for i in range(dust_cnt):
-        # 이미 방문했음
-        if v & (1 << i) > 0:
+        if v & (1 << i):
             continue
-        # 방문처리
-        v |= 1 << i
-        calc_min_dist(dists, i, v, move + dists[idx][i])
-        # 해당 비트 끄기
-        v &= ~(1 << i)
+        tmp = min(tmp, calc_min_dist(dp, i, v | (1 << i)) + dp[idx][1 << i])
+    dp[idx][v] = tmp
+    return dp[idx][v]
 
 
 def main():
-    global dust_cnt, cost
+    global dust_cnt
     ans = []
     while True:
         cost = INF
@@ -94,11 +91,11 @@ def main():
         init(W, H, _map, vacuum_and_dusts)
         vacuum_and_dusts.sort(key=lambda arr: arr[2])  # 순서대로 정렬
         dust_cnt = len(vacuum_and_dusts)
-        dists = [[INF] * dust_cnt for _ in range(len(vacuum_and_dusts))]
+        dp = [[INF] * (1 << dust_cnt) for _ in range(dust_cnt)]
         for elem in vacuum_and_dusts:
-            BFS(H, W, _map, dists, elem)
+            BFS(H, W, _map, dp, elem)
 
-        calc_min_dist(dists, 0, 1, 0)
+        cost = calc_min_dist(dp, 0, 1)
 
         ans.append(cost if cost != INF else -1)
 
