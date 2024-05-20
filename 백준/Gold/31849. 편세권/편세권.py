@@ -10,38 +10,37 @@ input = sys.stdin.readline
 INF = float("inf")
 DIRECTIONS = (-1, 0), (1, 0), (0, -1), (0, 1)
 N, M, R, C = map(int, input().split())
-_map = [["."] * (M + 1) for _ in range(N + 1)]
 
 
 q, cost = deque(), [[INF] * (M + 1) for _ in range(N + 1)]
+rooms = []
 for _ in range(R):
     a, b, p = map(int, input().split())
-    q.append((a, b, p, 0))
-    # cost[a][b] = 0
+    rooms.append((a, b, p))
 
-conv = []
+
 for _ in range(C):
     a, b = map(int, input().split())
-    conv.append((a, b))
-    _map[a][b] = "c"
+    q.append((a, b, 0))
+    cost[a][b] = 0
 
 
 def BFS():
     while q:
-        y, x, c, d = q.popleft()
+        y, x, d = q.popleft()
 
         for dy, dx in DIRECTIONS:
             ny, nx = dy + y, dx + x
 
-            if ny > N or nx > M or ny < 1 or nx < 1 or cost[ny][nx] <= (d + 1) * c:
+            if ny > N or nx > M or ny < 1 or nx < 1 or cost[ny][nx] <= d + 1:
                 continue
-            q.append((ny, nx, c, d + 1))
-            cost[ny][nx] = (d + 1) * c
+            q.append((ny, nx, d + 1))
+            cost[ny][nx] = d + 1
 
 
 def main():
     BFS()
-    print(min([cost[a][b] for a, b in conv]))
+    print(min([cost[a][b] * p for a, b, p in rooms]))
 
 
 if __name__ == "__main__":
