@@ -13,9 +13,6 @@ dp = [[1 if i == j else -1 for j in range(N + 1)] for i in range(N + 1)]
 
 
 def find(s, e):
-    if s > e:
-        return 1  # 결과에 영향을 미치지 않음
-
     if dp[s][e] != -1:
         return dp[s][e]
 
@@ -32,7 +29,7 @@ def is_same(s, e):
 
 
 def main():
-    for i in range(M):
+    for _ in range(M):
         s, e = map(int, input().split())
         print(find(s, e))
 
