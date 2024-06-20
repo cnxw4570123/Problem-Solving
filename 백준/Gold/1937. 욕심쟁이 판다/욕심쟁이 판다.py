@@ -31,13 +31,14 @@ def DFS(y, x):
 
 
 def main():
+    ans = 0
     for i in range(N):
         for j in range(N):
             if dp[i][j]:
                 continue
-            DFS(i, j)
+            ans = max(DFS(i, j), ans)
 
-    print(max([max(dp[i]) for i in range(N)]))
+    print(ans)
 
 
 if __name__ == "__main__":
