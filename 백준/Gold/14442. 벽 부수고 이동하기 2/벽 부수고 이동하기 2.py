@@ -10,41 +10,37 @@ input = sys.stdin.readline
 
 INF = float("inf")
 DIRECTIONS = (-1, 0), (1, 0), (0, -1), (0, 1)
-WALL, ROAD = "1", "0"
+WALL, ROAD = 1, 0
 
 N, M, K = map(int, input().split())
 
-_map = [list(input().rstrip()) for _ in range(N)]
+_map = [list(map(int, input().rstrip())) for _ in range(N)]
 
-v = [[[False] * M for _ in range(N)] for _ in range(K + 1)]
+v = [[[0] * M for _ in range(N)] for _ in range(K + 1)]
 
 
 def dijkstra():
-    q, d = deque([(0, 0, 0)]), 0
+    q = deque([(0, 0, K)])
 
     while q:
-        d += 1
-        q_size = len(q)
+        y, x, cnt = q.popleft()
 
-        for _ in range(q_size):
-            y, x, cnt = q.popleft()
+        if (y, x) == (N - 1, M - 1):
+            return v[cnt][y][x] + 1
 
-            if (y, x) == (N - 1, M - 1):
-                return d
+        for dy, dx in DIRECTIONS:
+            ny, nx = dy + y, dx + x
+            if ny >= N or nx >= M or ny < 0 or nx < 0:
+                continue
 
-            for dy, dx in DIRECTIONS:
-                ny, nx = dy + y, dx + x
-                if ny >= N or nx >= M or ny < 0 or nx < 0:
-                    continue
+            if _map[ny][nx] == ROAD and not v[cnt][ny][nx]:
+                q.append((ny, nx, cnt))
+                v[cnt][ny][nx] = v[cnt][y][x] + 1
+                continue
 
-                if _map[ny][nx] == ROAD and not v[cnt][ny][nx]:
-                    q.append((ny, nx, cnt))
-                    v[cnt][ny][nx] = True
-                    continue
-
-                if _map[ny][nx] == WALL and cnt < K and not v[cnt + 1][ny][nx]:
-                    q.append((ny, nx, cnt + 1))
-                    v[cnt + 1][ny][nx] = True
+            if _map[ny][nx] == WALL and cnt > 0 and not v[cnt - 1][ny][nx]:
+                q.append((ny, nx, cnt - 1))
+                v[cnt - 1][ny][nx] = v[cnt][y][x] + 1
     return -1
 
 
