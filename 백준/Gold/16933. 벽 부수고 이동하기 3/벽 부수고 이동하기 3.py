@@ -10,44 +10,46 @@ input = sys.stdin.readline
 INF = 2_000_000
 ROAD, WALL = "0", "1"
 DAY, NIGHT = 0, 1
-dy, dx = (-1, 0, 1, 0), (0, -1, 0, 1)
+DIRECTIONS = (-1, 0), (1, 0), (0, -1), (0, 1)
 
 N, M, K = map(int, input().split())
 _map = [list(input().rstrip()) for _ in range(N)]
-dist = [[[0] * M for _ in range(N)] for _ in range(K + 1)]
+v = [[K + 1] * M for _ in range(N)]
 
 
 def BFS():
-    dist[0][0][0] = 0
+    q = deque([(0, 0, 0)])
+    v[0][0] = 0
+    time, move = DAY, 0
 
-    q = deque([(0, 0, 0, 0, DAY)])
     while q:
-        y, x, hammer_left, move, time = q.popleft()
+        move += 1
+        q_size = len(q)
+        for _ in range(q_size):
+            y, x, hammer_cnt = q.popleft()
 
-        if (y, x) == (N - 1, M - 1):
-            return move + 1
+            if (y, x) == (N - 1, M - 1):
+                return move
 
-        for dir in range(4):
-            ny, nx = y + dy[dir], x + dx[dir]
-
-            if ny >= N or nx >= M or ny < 0 or nx < 0:
-                continue
-
-            if _map[ny][nx] == ROAD and not dist[hammer_left][ny][nx]:
-                dist[hammer_left][ny][nx] = move + 1
-                q.append((ny, nx, hammer_left, move + 1, (time + 1) % 2))
-                continue
-
-            if (
-                _map[ny][nx] == WALL
-                and hammer_left < K
-                and not dist[hammer_left + 1][ny][nx]
-            ):
-                if time == DAY:
-                    dist[hammer_left + 1][ny][nx] = dist[hammer_left][ny][nx] + 1
-                    q.append((ny, nx, hammer_left + 1, move + 1, (time + 1) % 2))
+            for dy, dx in DIRECTIONS:
+                ny, nx = dy + y, dx + x
+                if ny >= N or nx >= M or ny < 0 or nx < 0 or v[ny][nx] <= hammer_cnt:
                     continue
-                q.append((y, x, hammer_left, move + 1, (time + 1) % 2))
+
+                if _map[ny][nx] == ROAD:
+                    v[ny][nx] = hammer_cnt
+                    q.append((ny, nx, hammer_cnt))
+                    continue
+
+                # 벽이면
+                if hammer_cnt < K:
+                    if time == DAY:
+                        q.append((ny, nx, hammer_cnt + 1))
+                        v[ny][nx] = hammer_cnt + 1
+                        continue
+                    q.append((y, x, hammer_cnt))
+
+        time = (time + 1) % 2
 
     return -1
 
