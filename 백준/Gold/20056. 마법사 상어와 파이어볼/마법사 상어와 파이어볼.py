@@ -1,91 +1,98 @@
 import sys
 
-
 # print = sys.stdout.write
 input = sys.stdin.readline
+
 
 DIRECTION = (-1, 0), (-1, 1), (0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1)
 
 N, M, K = map(int, input().split())
 fireballs = []
+
 for _ in range(M):
     r, c, m, s, d = map(int, input().split())
     fireballs.append([r - 1, c - 1, m, s, d])
 
 
 def correction(r, c):
-    if r < 0:
-        r += N
     if r >= N:
         r -= N
+    if r < 0:
+        r += N
 
-    if c < 0:
-        c += N
     if c >= N:
         c -= N
+    if c < 0:
+        c += N
+
     return r, c
 
 
 def move():
     global fireballs
-    board = [[[] for _ in range(N)] for _ in range(N)]
-    while fireballs:
-        r, c, m, s, d = fireballs.pop()
+
+    for i in range(len(fireballs)):
+        r, c, _, s, d = fireballs[i]
         dr, dc = DIRECTION[d]
         # 보정한 후의 좌표
-        # 실제 움직여야 하는 칸
 
-        nr, nc = correction(dr * (s % N) + r, dc * (s % N) + c)
-        board[nr][nc].append((m, s, d))
+        s %= N
+        fireballs[i][0], fireballs[i][1] = correction(dr * s + r, dc * s + c)
+
+
+def mix():
+    # (질량 합계, 속력 합계, 파이어볼 개수, 방향, 나머지가 같은지)
+    global fireballs
+    board = [[()] * N for _ in range(N)]
+
+    while fireballs:
+        r, c, m, s, d = fireballs.pop()
+        if not board[r][c]:
+            board[r][c] = (m, s, 1, d, True)
+            continue
+
+        pm, ps, pc, pd, pr = board[r][c]
+        # 한 번이라도 나머지가 다르면 [1, 3, 5, 7]
+        if not pr:
+            board[r][c] = (pm + m, ps + s, pc + 1, pd, pr)
+            continue
+
+        board[r][c] = (pm + m, ps + s, pc + 1, pd, (pd % 2) == (d % 2))
 
     return board
 
 
-def mix_and_split(board):
+def divide(board):
     global fireballs
-
-    # (질량 합계, 속력 합계, 파이어볼 개수, 방향 같은지)
-    # 방향 같은 것
-    # 들어오는 원소부터 ^ (d % 2)
     for i in range(N):
         for j in range(N):
             if not board[i][j]:
                 continue
+            mass, velocity, cnt, d, same_remainder = board[i][j]
 
-            if len(board[i][j]) == 1:
-                fireballs.append([i, j, *board[i][j][0]])
+            if cnt == 1:
+                fireballs.append([i, j, mass, velocity, d])
                 continue
-
-            mass, velocity = 0, 0
-            for m, s, _ in board[i][j]:
-                mass += m
-                velocity += s
 
             if mass < 5:
                 continue
 
             mass //= 5
-            velocity //= len(board[i][j])
-            same_remainder = all(
-                board[i][j][0][2] % 2 == fireball[2] % 2 for fireball in board[i][j]
-            )
+            velocity //= cnt
 
-            divide(i, j, mass, velocity, same_remainder)
-
-
-def divide(i, j, mass, velocity, same_remainder):
-    global fireballs
-    start = 0 if same_remainder else 1
-    for d in range(start, 8, 2):
-        fireballs.append([i, j, mass, velocity, d])
+            start = 0 if same_remainder else 1
+            for d in range(start, 8, 2):
+                fireballs.append([i, j, mass, velocity, d])
 
 
 def main():
     for _ in range(K):
         # move
-        board = move()
-        # 합치고 나누기
-        mix_and_split(board)
+        move()
+        # 합치기
+        board = mix()
+        # 나누기
+        divide(board)
 
     ans = sum([fireball[2] for fireball in fireballs])
 
