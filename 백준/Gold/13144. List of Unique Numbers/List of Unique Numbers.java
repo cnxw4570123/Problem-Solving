@@ -6,10 +6,10 @@ import java.util.*;
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-	static int N;
+	static int N, MAX = 100_001;
 	static long ans = 0;
 	static int[] numbers;
-	static Set<Integer> included = new HashSet<>();
+	static boolean[] included = new boolean[MAX];
 
 	public static void main(String[] args) throws IOException {
 		N = Integer.parseInt(br.readLine());
@@ -21,13 +21,14 @@ public class Main {
 		int start = 0, end = 0;
 
 		while (end < N) {
-			if (!included.add(numbers[end])) {
-				included.remove(numbers[start]);
+			if (included[numbers[end]]) {
+				included[numbers[start]] = false;
 				start++;
 				continue;
 			}
+			included[numbers[end]] = true;
+			ans += end - start + 1;
 			end++;
-			ans += included.size();
 		}
 		bw.write(ans + "");
 		bw.flush();
