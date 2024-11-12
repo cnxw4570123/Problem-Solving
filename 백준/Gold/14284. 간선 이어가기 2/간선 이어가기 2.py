@@ -9,14 +9,12 @@ INF = float("inf")
 
 
 N, M = map(int, input().split())
-graph = [[INF] * (N + 1) for _ in range(N + 1)]
-for i in range(1, N + 1):
-    graph[i][i] = 0
+graph = [[] for _ in range(N + 1)]
 
 for _ in range(M):
     a, b, c = map(int, input().split())
-    graph[a][b] = min(graph[a][b], c)
-    graph[b][a] = min(graph[b][a], c)
+    graph[a].append((b, c))
+    graph[b].append((a, c))
 
 S, T = map(int, input().split())
 
@@ -31,19 +29,17 @@ def dijkstra():
 
     pq = [(0, S)]
     while pq:
-        cost, to = heappop(pq)
-        if to == T:
+        current_cost, current = heappop(pq)
+        if current == T:
             return dist[T]
 
-        for next in range(1, N + 1):
-            if next == to or graph[to][next] == INF:
+        for next, next_cost in graph[current]:
+            total = current_cost + next_cost
+            if total >= dist[next]:
                 continue
 
-            next_cost = cost + graph[to][next]
-            if next_cost >= dist[next]:
-                continue
-            dist[next] = next_cost
-            heappush(pq, (next_cost, next))
+            dist[next] = total
+            heappush(pq, (total, next))
 
 
 if __name__ == "__main__":
