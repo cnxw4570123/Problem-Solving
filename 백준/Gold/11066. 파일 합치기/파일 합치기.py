@@ -3,7 +3,6 @@ import sys
 # print = sys.stdout.write
 input = sys.stdin.readline
 
-
 INF = float("inf")
 
 T = int(input().rstrip())
@@ -14,22 +13,23 @@ def main():
         K = int(input().rstrip())
 
         dp = [[INF] * (K + 1) for _ in range(K + 1)]
-        weight = [0] * (K + 1)
+        weight = [0] + list(map(int, input().split()))
 
-        sum = 0
-        for i, w in zip(range(1, K + 1), map(int, input().split())):
+        for i in range(1, K + 1):
             dp[i][i] = 0
-            sum += w
-            weight[i] = sum
+            weight[i] += weight[i - 1]
 
         for i in range(K - 1, 0, -1):
             for j in range(i + 1, K + 1):
-                # 몇개의 구간
-                for k in range(j - i):
-                    dp[i][j] = min(
-                        dp[i][j],
-                        dp[i][i + k] + dp[i + k + 1][j] + weight[j] - weight[i - 1],
-                    )
+                # 합치는 비용은 총 용량과 같음
+                merging_cost = weight[j] - weight[i - 1]
+
+                gap = j - i
+                dp[i][j] = (
+                    min([dp[i][i + k] + dp[i + k + 1][j] for k in range(gap)])
+                    + merging_cost
+                )
+
         print(dp[1][K])
 
 
