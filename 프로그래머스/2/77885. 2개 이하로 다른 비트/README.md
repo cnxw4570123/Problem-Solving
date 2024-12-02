@@ -1,6 +1,6 @@
 # [level 2] 2개 이하로 다른 비트 - 77885 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/77885#) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/77885#qna) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 12월 02일 15:48:46
+2024년 12월 02일 15:50:47
 
 ### 문제 설명
 
