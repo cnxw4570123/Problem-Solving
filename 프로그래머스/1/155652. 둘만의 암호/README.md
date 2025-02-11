@@ -1,10 +1,10 @@
 # [level 1] 둘만의 암호 - 155652 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/155652?language=python3) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/155652?language=python3#) 
 
 ### 성능 요약
 
-메모리: 10.1 MB, 시간: 0.25 ms
+메모리: 10.1 MB, 시간: 0.40 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 02월 11일 10:38:18
+2025년 02월 11일 10:39:17
 
 ### 문제 설명
 

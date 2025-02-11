@@ -1,4 +1,4 @@
-ALPHABET = "abcdefghijklmnopqrstuvwxyz"
+ALPHABET, BASE = "abcdefghijklmnopqrstuvwxyz", 97
 def solution(s, skip, index):
     ans = []
     
@@ -10,6 +10,6 @@ def solution(s, skip, index):
                 continue
             mv -= 1
         
-        ans.append(chr(temp_idx + 97))            
+        ans.append(chr(temp_idx + BASE))            
     
     return ''.join(map(str, ans))
