@@ -4,26 +4,22 @@ def solution(cap, n, deliveries, pickups):
     while deliveries or pickups:
         remove_empty_route(deliveries)
         remove_empty_route(pickups)
-        delivery_box = 0
         dist += max(len(deliveries), len(pickups)) * 2
         
-        for house in range(len(deliveries) - 1, -1, -1):
-            if cap < delivery_box + deliveries[house]:
-                deliveries[house] -= cap - delivery_box
-                break
-            delivery_box += deliveries[house]
-            deliveries[house] = 0
-        
-        pickup_box = 0
-        for house in range(len(pickups) -1, -1, -1):
-            if cap < pickup_box + pickups[house]:
-                pickups[house] -= cap - pickup_box
-                break
-            pickup_box += pickups[house]
-            pickups[house] = 0
+        calc_boxes(deliveries, cap)
+        calc_boxes(pickups, cap)
         
     return dist
 
 def remove_empty_route(l: list):
     while l and not l[-1]:
         l.pop()
+        
+def calc_boxes(l: list, cap: int):
+    temp_box = 0
+    for house in range(len(l) -1, -1, -1):
+        if cap < temp_box + l[house]:
+            l[house] -= cap - temp_box
+            return
+        temp_box += l[house]
+        l[house] = 0
