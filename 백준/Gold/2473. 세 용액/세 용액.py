@@ -15,14 +15,19 @@ def main():
         left, right = i + 1, N - 1
 
         while left < right:
-            if abs(numbers[i] + numbers[left] + numbers[right]) < abs(gap):
+            current_sum = numbers[i] + numbers[left] + numbers[right]
+            if abs(current_sum) < abs(gap):
                 ans = [numbers[i], numbers[left], numbers[right]]
-                gap = abs(numbers[i] + numbers[left] + numbers[right])
+                gap = abs(current_sum)
 
-            if numbers[i] + numbers[left] + numbers[right] < 0:
+            if current_sum < 0:
                 left += 1
-            else:
+            elif current_sum > 0:
                 right -= 1
+            else:
+                print(*ans)
+                return
+
     print(*ans)
 
 
