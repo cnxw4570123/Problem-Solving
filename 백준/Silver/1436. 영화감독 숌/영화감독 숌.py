@@ -1,17 +1,21 @@
-# prob : 1436
-# https://www.acmicpc.net/problem/1436
-
 import sys
 
+# print = sys.stdout.write
 input = sys.stdin.readline
 
-n = int(input().rstrip())
 
-start = 666
-while n > 0:
-    if "666" in str(start):
-        n -= 1
-        if n == 0:
-            break
-    start += 1
-print(start)
+N = int(input().rstrip())
+
+
+def main():
+    cnt, start = 0, 665
+    while cnt != N:
+        start += 1
+        if "666" in str(start):
+            cnt += 1
+
+    print(start)
+
+
+if __name__ == "__main__":
+    main()
