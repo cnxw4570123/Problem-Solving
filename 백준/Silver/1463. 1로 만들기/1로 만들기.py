@@ -1,37 +1,31 @@
-import sys
-
-sys.setrecursionlimit(10**6)
-
-# print = sys.stdout.write
-input = sys.stdin.readline
-
-MAX = sys.maxsize
-N = int(input().rstrip())
-dp = [MAX for _ in range(10**6 + 1)]
-dp[1], dp[2], dp[3] = (0, 1, 1)
+# prob : 1463
+# https://www.acmicpc.net/problem/1463
 
 
-def main():
-    for i in range(4, N + 1):
-        find(i)
+def make_number(memo, i):
+    if memo[i]:
+        return memo[i]
+    else:
+        i_minus_one = 1 + make_number(memo, i - 1)
+        div_3, div_2 = int(1e9), int(1e9)
+        if i % 3 == 0:
+            div_3 = memo[3] + make_number(memo, i // 3)
 
-    print(dp[N])
+        if i % 2 == 0:
+            div_2 = memo[2] + make_number(memo, i // 2)
 
+        memo[i] = min(div_3, div_2, i_minus_one)
 
-def find(num):
-    if dp[num] != MAX:
-        return dp[num]
-
-    if num % 3 == 0:
-        dp[num] = min(dp[num], find(num // 3) + 1)
-
-    if num % 2 == 0:
-        dp[num] = min(dp[num], find(num // 2) + 1)
-
-    dp[num] = min(dp[num], find(num - 1) + 1)
-
-    return dp[num]
+    return memo[i]
 
 
-if __name__ == "__main__":
-    main()
+ans = 0
+n = int(input())
+memo = [0, 0, 1, 1] + [0 for _ in range(4, n + 1)]  # 메모이제이션 준비
+
+
+for i in range(4, n + 1):  # 0 ~ n
+    make_number(memo, i)
+
+
+print(memo[n])
