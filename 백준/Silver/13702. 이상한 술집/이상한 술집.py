@@ -1,31 +1,26 @@
 import sys
 
-
 # print = sys.stdout.write
 input = sys.stdin.readline
 
-
 N, K = map(int, input().split())
-drinks = sorted([int(input().rstrip()) for _ in range(N)])
+pots = sorted([int(input().rstrip()) for _ in range(N)])
 
 
 def main():
-    left, right = 1, drinks[-1]
+    lo, hi = 0, pots[-1] + 1
 
-    while left <= right:
-        mid = (left + right) >> 1
+    while lo + 1 < hi:
+        mid = (lo + hi) >> 1
 
-        people = 0
-        for drink in drinks:
-            people += drink // mid
+        cnt = sum([pot // mid for pot in pots])
 
-        if people < K:
-            right = mid - 1
+        if cnt >= K:
+            lo = mid
             continue
+        hi = mid
 
-        left = mid + 1
-
-    print(right)
+    print(lo)
 
 
 if __name__ == "__main__":
