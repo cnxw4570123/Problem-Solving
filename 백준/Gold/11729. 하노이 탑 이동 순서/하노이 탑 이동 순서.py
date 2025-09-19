@@ -1,26 +1,36 @@
 import sys
-
+from collections import defaultdict
 
 # print = sys.stdout.write
 input = sys.stdin.readline
 
 N = int(input().rstrip())
-ans = []
+memo = defaultdict(str)
 
 
 def main():
-    hanoi(N, 1, 2, 3)
-    print(len(ans))
-    print("\n".join(map(str, ans)))
+    print((1 << N) - 1)
+    print(hanoi(N, 1, 2, 3))
 
 
 def hanoi(cnt, src, temp, dest):
-    if cnt == 0:
-        return
+    key = (cnt, src, temp, dest)
 
-    hanoi(cnt - 1, src, dest, temp)
-    ans.append(f"{src} {dest}")
-    hanoi(cnt - 1, temp, src, dest)
+    if memo[key]:
+        return memo[key]
+
+    if cnt == 1:
+        return f"{src} {dest}"
+
+    res = "\n".join(
+        [
+            hanoi(cnt - 1, src, dest, temp),
+            f"{src} {dest}",
+            hanoi(cnt - 1, temp, src, dest),
+        ]
+    )
+    memo[key] = res
+    return res
 
 
 if __name__ == "__main__":
