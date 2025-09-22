@@ -1,5 +1,4 @@
 import sys
-from collections import deque
 
 # print = sys.stdout.write
 input = sys.stdin.readline
@@ -19,17 +18,17 @@ def main():
 
 
 def topology_sort():
-    q = deque([i for i in range(1, N + 1) if not in_degree[i]])
+    s = [i for i in range(1, N + 1) if not in_degree[i]]
 
-    while q:
-        current = q.popleft()
+    while s:
+        current = s.pop()
         print(current)
 
         for next in graph[current]:
             in_degree[next] -= 1
 
             if not in_degree[next]:
-                q.append(next)
+                s.append(next)
 
 
 if __name__ == "__main__":
