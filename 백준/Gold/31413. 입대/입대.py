@@ -1,33 +1,31 @@
 import sys
 
-sys.setrecursionlimit(10**8)
 # print = sys.stdout.write
 input = sys.stdin.readline
 
-INF = sys.maxsize
 N, M = map(int, input().split())
-score = [0] + list(map(int, input().split()))
+volunteer_points = [0] + list(map(int, input().split()))
 A, D = map(int, input().split())
-dp = [[0] * (N + D + 1) for _ in range(N // D + 2)]
+
+volunteer_points += [0] * (D - 1)
+dp = [[0] * (N + D) for _ in range((N + D - 1) // D + 1)]
 
 
 def main():
-    global score
-    score += [0] * D
-    for i in range(1, N + 1):
-        dp[0][i] = dp[0][i - 1] + score[i]
+    # init
+    for i in range(1, N + D):
+        dp[0][i] = dp[0][i - 1] + volunteer_points[i]
 
-    ans = INF
-    for count in range(N // D + 2):
-        for day in range(D, N + D):
-            if count > 0:
-                dp[count][day] = max(
-                    dp[count - 1][day - D] + A, dp[count][day - 1] + score[day]
-                )
+    for i in range(1, len(dp)):
+        for j in range(D, N + D):
+            dp[i][j] = max(dp[i - 1][j - D] + A, dp[i][j - 1] + volunteer_points[j])
 
-            if dp[count][day] >= M:
-                ans = min(ans, count)
-    print(ans if ans != INF else -1)
+    for i in range(len(dp)):
+        if dp[i][-1] >= M:
+            print(i)
+            return
+
+    print(-1)
 
 
 if __name__ == "__main__":
