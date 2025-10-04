@@ -11,6 +11,4 @@ def solution(elements):
                 dp[i][w] = dp[i][w - 1] + elements[i + w - 2]
             answer.add(dp[i][w])
             
-    
-    
     return len(answer)
