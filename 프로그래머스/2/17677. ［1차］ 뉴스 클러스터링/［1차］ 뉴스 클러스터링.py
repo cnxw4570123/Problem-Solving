@@ -20,7 +20,7 @@ def process(string):
     string = string.lower()
     for i in range(len(string) - 1):
         candidate = string[i:i+2]
-        if not re.match(r'[a-z]{2,}', candidate):
+        if re.search(r'[^a-z]', candidate):
             continue
         res[candidate] = res.get(candidate, 0) + 1
     return res
