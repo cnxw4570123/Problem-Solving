@@ -1,7 +1,7 @@
+HANDS = {"left" : (0, "L"), "right" : (1, "R")}
 
 def solution(numbers, hand):
     thumbs = ["*", "#"]
-    hands = {"left" : (0, "L"), "right" : (1, "R")}
 
     positions = {
         1:(0, 0), 2:(0, 1), 3:(0, 2),
@@ -21,25 +21,23 @@ def solution(numbers, hand):
             answer.append("R")
             continue
             
-        left_dist = get_dist(positions[number], positions[thumbs[0]])
-        right_dist = get_dist(positions[number], positions[thumbs[1]])
-
-        if left_dist == right_dist:
-            idx, direction = hands[hand]
-            thumbs[idx] = number
-            answer.append(direction)
-            continue
-        
-        if left_dist > right_dist:
-            thumbs[1] = number
-            answer.append("R")
-            continue
-
-        thumbs[0] = number
-        answer.append("L")
+        idx, direction = process(positions[thumbs[0]], positions[thumbs[1]], positions[number], hand)
+        thumbs[idx] = number
+        answer.append(direction)
             
         
     return "".join(answer)
 
 def get_dist(pos1, pos2):
     return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+
+def process(pos1, pos2, number_pos, hand):
+    left, right = get_dist(pos1, number_pos), get_dist(number_pos, pos2)
+    if left == right:
+        return HANDS[hand]
+    
+    if left > right:
+        return HANDS["right"]
+    
+    return HANDS["left"]
+    
