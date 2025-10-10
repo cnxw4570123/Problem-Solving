@@ -13,14 +13,13 @@ def solution(dice):
         dp[i] = Counter(dice[i - 1])
     
     for comb in combinations(range(1, n + 1), n // 2):
-        # (1, 2) (3, 4)와 (3, 4), (1, 2)는 같음.
-        #if dp[comb]:
-        #    continue
+        if dp[comb]:
+            continue
 
         me = make_comb(comb)
-        opposite = [i for i in range(1, n + 1) if not i in comb]
-        other = make_comb(tuple(opposite))
-        res[comb] = calculate(me, other)
+        opposite = tuple([i for i in range(1, n + 1) if not i in comb])
+        other = make_comb(opposite)
+        res[comb], res[opposite] = calculate(me, other)
         
         for i in range(3):
             if max_res[i] > res[comb][i]:
@@ -29,6 +28,12 @@ def solution(dice):
             answer = comb
             break
         
+        for i in range(3):
+            if max_res[i] > res[opposite][i]:
+                break
+            max_res[i:] = res[opposite][i:]
+            answer = opposite
+            break
 		        
     return answer
 
@@ -53,14 +58,16 @@ def make_comb(combination):
 
 
 def calculate(a, b):
-    ans = [0, 0, 0] # 승 무 패
+    a_res = [0, 0, 0]
     for k1, v1 in a.items():
         for k2, v2 in b.items():
+            value = v1 * v2
             if k1 > k2:
-                ans[0] += v1 * v2
+                a_res[0] += value
             elif k1 == k2:
-                ans[1] += v1 * v2
+                a_res[1] += value
             else:
-                ans[2] += v1 * v2
-    return ans
+                a_res[2] += value
+    b_res = list(reversed(a_res))
+    return a_res, b_res
                 
