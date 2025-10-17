@@ -1,25 +1,29 @@
 import sys
 from collections import defaultdict
 
-input = sys.stdin.readline
 # print = sys.stdout.write
+input = sys.stdin.readline
 
-N = int(input().rstrip())
-words = [input().rstrip() for _ in range(N)]
-alpha = defaultdict(int)
-numbers = []
-for word in words:
-    for i in range(len(word)):
-        alpha[word[i]] += 10 ** (len(word) - i - 1)
 
-for num in alpha.values():
-    numbers.append(num)
+def main():
+    init()
+    numbers = defaultdict(int)
+    for alphabet in alphabets:
+        for i in range(len(alphabet)):
+            numbers[alphabet[i]] += 10 ** (len(alphabet) - 1 - i)
 
-numbers.sort(reverse=True)
+    current, ans = 9, 0
+    for _, value in sorted(numbers.items(), key=lambda item: (-item[1])):
+        ans += current * value
+        current -= 1
+    print(ans)
 
-sum, count = 0, 9
-for number in numbers:
-    sum += count * number
-    count -= 1
 
-print(sum)
+def init():
+    global N, alphabets
+    N = int(input().rstrip())
+    alphabets = [input().rstrip() for _ in range(N)]
+
+
+if __name__ == "__main__":
+    main()
