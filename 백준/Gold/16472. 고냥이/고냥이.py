@@ -1,38 +1,27 @@
 import sys
-from collections import Counter, deque
+from collections import Counter
 
 # print = sys.stdout.write
 input = sys.stdin.readline
 
-
 def main():
-    global alphabet_cnts, q
+    global alphabet_cnts
     init()
-    alphabet_cnts, q = Counter(), deque()
+    alphabet_cnts = Counter()
 
-    start, ans = 0, 0
-    for idx in range(len(strings)):
-        if q and q[-1][0] == strings[idx]:
-            q[-1][1] = idx
-            alphabet_cnts[strings[idx]] += 1
-            ans = max(ans, idx - start + 1)
-            continue
+    left, ans = 0, 0
 
-        q.append([strings[idx], idx])
-        alphabet_cnts[strings[idx]] += 1
+    for right in range(len(strings)):
+        alphabet_cnts[strings[right]] += 1
 
-        while q and len(alphabet_cnts) > N:
-            alphabet, end_idx = q.popleft()
+        while len(alphabet_cnts) > N:
+            if alphabet_cnts[strings[left]] == 1:
+                del alphabet_cnts[strings[left]]
+            else:
+                alphabet_cnts[strings[left]] -= 1
 
-            cnt = end_idx - start + 1
-            start = end_idx + 1
-            if alphabet_cnts[alphabet] == cnt:
-                del alphabet_cnts[alphabet]
-                continue
-
-            alphabet_cnts[alphabet] -= cnt
-        ans = max(ans, idx - start + 1)
-
+            left += 1
+        ans = max(ans, right - left + 1)
     print(ans)
 
 
