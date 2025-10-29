@@ -22,18 +22,12 @@ public class Main {
             }
         }
 
-        for (int i = 0; i < 10; i++) {
-            if (brokenButtons.contains(i)) {
+        ans = Math.abs(N - 100);
+        for (int i = 0; i < 1_000_001; i++) {
+            if (!isPossible(i)) {
                 continue;
             }
-            buttons.add(i);
-        }
-
-        find(10, 0, 0);
-        ans = Math.abs(100 - N);
-        for (int temp : candidates) {
-            int cnt = Math.abs(N - temp) + Integer.toString(temp).length();
-            ans = Math.min(ans, cnt);
+            ans = Math.min(ans, Math.abs(N - i) + calculateLength(i));
         }
         bw.write(ans + "");
 
@@ -42,21 +36,25 @@ public class Main {
         br.close();
     }
 
-    static void find(int max_cnt, int cnt, int start) {
-        if (cnt == max_cnt || Math.abs(N - start) > 500_000) {
-            return;
-        }
-        if (start != 0 || cnt != 0) {
-            candidates.add(start);
-        }
-
-        for (int button : buttons) {
-
-            int res = start * 10 + button;
-            if (candidates.contains(res)) {
-                continue;
+    static boolean isPossible(int target) {
+        int len = calculateLength(target);
+        while (len-- > 0) {
+            if (brokenButtons.contains(target % 10)) {
+                return false;
             }
-            find(max_cnt, cnt + 1, res);
+            target /= 10;
         }
+        return true;
+    }
+
+    static int calculateLength(int target) {
+        int base = 1;
+        for (int i = 0; i < 6; i++) {
+            base *= 10;
+            if (target < base) {
+                return i + 1;
+            }
+        }
+        return -1;
     }
 }
