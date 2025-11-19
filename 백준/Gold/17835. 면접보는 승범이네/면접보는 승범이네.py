@@ -1,10 +1,8 @@
 import sys
-from collections import defaultdict
 from heapq import heappush, heappop
 
 # print = sys.stdout.write
 input = sys.stdin.readline
-
 INF = float("inf")
 
 
@@ -34,7 +32,7 @@ def dijkstra():
         if dist[current] < cost:
             continue
 
-        for next_node, next_cost in graph[current].items():
+        for next_node, next_cost in graph[current]:
             new_cost = next_cost + cost
 
             if dist[next_node] <= new_cost:
@@ -49,13 +47,11 @@ def init():
     global N, M, K, graph, interview_places
     N, M, K = map(int, input().split())
 
-    graph = defaultdict(dict)
+    graph = [[] for _ in range(N + 1)]
 
     for _ in range(M):
         u, v, c = map(int, input().split())
-        if graph[v].get(u, INF) <= c:
-            continue
-        graph[v][u] = c
+        graph[v].append((u, c))
 
     interview_places = list(map(int, input().split()))
 
