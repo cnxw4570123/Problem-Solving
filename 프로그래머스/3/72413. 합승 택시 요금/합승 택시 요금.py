@@ -1,46 +1,29 @@
-from heapq import heappop, heappush
-
 INF = float("inf")
 
 
 def solution(n, s, a, b, fares):
-    global graph, N
-    N = n
-    graph = [[] for _ in range(n + 1)]
+    global costs
+    costs = [[INF if j != i else 0 for j in range(n + 1)] for i in range(n + 1)]
+	
     for start, end, cost in fares:
-        graph[start].append((end, cost))
-        graph[end].append((start, cost))
-
-    dist_start = dijkstra(s)
-    dist_a, dist_b = dijkstra(a), dijkstra(b)
-
-    answer = dist_start[a] + dist_start[b]
+        costs[start][end] = cost
+        costs[end][start] = cost
+    
+    
+    for j in range(1, n + 1):
+        for i in range(1, n + 1):
+            for k in range(1, n + 1):
+                if costs[i][j] + costs[j][k] >= costs[i][k]:
+                    continue
+                costs[i][k] = costs[i][j] + costs[j][k]
+	
+    
+    answer = costs[s][a] + costs[s][b]
+   
+        
     for i in range(1, n + 1):
-        candidate = dist_a[i] + dist_b[i] + dist_start[i]
-        if candidate < answer:
-            answer = candidate
-    return answer
-
-
-def dijkstra(s):
-    dist = [INF] * (N + 1)
-    dist[s] = 0
-
-    hq = [(0, s)]
-
-    while hq:
-        cost, current = heappop(hq)
-        if dist[current] < cost:
+        if answer <= costs[a][i] + costs[b][i] + costs[s][i]:
             continue
-
-        for next_node, next_cost in graph[current]:
-            new_cost = next_cost + cost
-
-            if dist[next_node] <= new_cost:
-                continue
-
-            dist[next_node] = new_cost
-
-            heappush(hq, (new_cost, next_node))
-
-    return dist
+        answer = costs[a][i] + costs[b][i] + costs[s][i]
+        
+    return answer
