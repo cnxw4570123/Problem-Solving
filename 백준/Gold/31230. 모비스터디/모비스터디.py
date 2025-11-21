@@ -8,18 +8,32 @@ INF = float("inf")
 
 def main():
     init()
-    dist_a, dist_b = dijkstra(A), dijkstra(B)
-    ans = []
+    dist = dijkstra(A)
 
-    for i in range(1, N + 1):
-        if dist_a[i] + dist_b[i] == dist_a[B]:
-            ans.append(i)
+    for u in range(1, N + 1):
+        if dist[u] == INF:
+            continue
+        for v, w in graph[u]:
+            if dist[u] + w == dist[v]:
+                prev[v].add(u)
+
+    ans = set()
+
+    s = [B]
+    while s:
+        current = s.pop()
+
+        ans.add(current)
+
+        for next in prev[current]:
+            s.append(next)
 
     print(len(ans))
-    print(" ".join(map(str, ans)))
+    print(" ".join(map(str, sorted(ans))))
 
 
 def dijkstra(start):
+    global prev
     dist = [INF] * (N + 1)
     dist[start] = 0
 
@@ -36,7 +50,6 @@ def dijkstra(start):
 
             if dist[next_city] <= new_cost:
                 continue
-
             dist[next_city] = new_cost
             heappush(hq, (new_cost, next_city))
 
@@ -44,9 +57,10 @@ def dijkstra(start):
 
 
 def init():
-    global N, M, A, B, graph
+    global N, M, A, B, graph, prev
     N, M, A, B = map(int, input().split())
     graph = [[] for _ in range(N + 1)]
+    prev = [set() for _ in range(N + 1)]
 
     for _ in range(M):
         a, b, c = map(int, input().split())
