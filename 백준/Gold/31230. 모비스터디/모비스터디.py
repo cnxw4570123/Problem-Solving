@@ -1,47 +1,59 @@
 import sys
-import heapq
+from heapq import heappush, heappop
 
+# print = sys.stdout.write
 input = sys.stdin.readline
-INF = sys.maxsize
+INF = float("inf")
 
-# 도시 개수, 도로 개수, 민겸 도시, 시은 도시
-N, M, A, B = map(int, input().split())
-edge_lst = [[] for _ in range(N + 1)]
-for _ in range(M):
-    a, b, c = map(int, input().split())
-    edge_lst[a].append((b, c))
-    edge_lst[b].append((a, c))
+
+def main():
+    init()
+    dist_a, dist_b = dijkstra(A), dijkstra(B)
+    ans = []
+
+    for i in range(1, N + 1):
+        if dist_a[i] + dist_b[i] == dist_a[B]:
+            ans.append(i)
+
+    print(len(ans))
+    print(" ".join(map(str, ans)))
 
 
 def dijkstra(start):
-    dist = [INF for _ in range(N + 1)]
-    # 초기 세팅
-    hq = []
-    heapq.heappush(hq, (0, start))
+    dist = [INF] * (N + 1)
     dist[start] = 0
 
+    hq = [(0, start)]
+
     while hq:
-        now_dist, now = heapq.heappop(hq)
-        if now_dist > dist[now]:
+        cost, current = heappop(hq)
+
+        if dist[current] < cost:
             continue
-        for next, next_dist in edge_lst[now]:
-            if now_dist + next_dist < dist[next]:
-                dist[next] = now_dist + next_dist
-                heapq.heappush(hq, (dist[next], next))
+
+        for next_city, next_cost in graph[current]:
+            new_cost = next_cost + cost
+
+            if dist[next_city] <= new_cost:
+                continue
+
+            dist[next_city] = new_cost
+            heappush(hq, (new_cost, next_city))
 
     return dist
 
 
-dist_a = dijkstra(A)
-dist_b = dijkstra(B)
+def init():
+    global N, M, A, B, graph
+    N, M, A, B = map(int, input().split())
+    graph = [[] for _ in range(N + 1)]
 
-ans = []
+    for _ in range(M):
+        a, b, c = map(int, input().split())
 
-for i in range(1, N + 1):
-    if dist_a[i] == INF or dist_b[i] == INF:
-        continue
-    if dist_a[i] + dist_b[i] == dist_a[B]:
-        ans.append(i)
+        graph[a].append((b, c))
+        graph[b].append((a, c))
 
-print(len(ans))
-print(*ans)
+
+if __name__ == "__main__":
+    main()
