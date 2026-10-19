@@ -12,16 +12,14 @@ public class Main {
         int max = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n - 2; j++) {
-                int rect1 = arr[i][j] + arr[i][j + 1] + arr[i][j + 2];
-
                 for (int k = i; k < n; k++) {
-                    for (int l = j; l < n - 2; l++) {
-                        if (
-                            k == i && 
-                            (l == j || l == j + 1 || l == j + 2)
-                        ) continue;
+                    for (int l = 0; l < n - 2; l++) {
+                        if (k == i && Math.abs(j - l) <= 2) continue;
+
+                        int rect1 = arr[i][j] + arr[i][j + 1] + arr[i][j + 2];
                         int rect2 = arr[k][l] + arr[k][l + 1] + arr[k][l + 2];
                         max = Math.max(max, rect1 + rect2);
+
                     }
                 }
             }
