@@ -32,8 +32,8 @@ public class Main {
                     }
                 }
 
-                // ↖
-                if(i < MAX - 4 && j > 4) {
+                // ↙
+                if(i < MAX - 4 && j > 3) {
                     if(
                         arr[i][j] == arr[i + 1][j - 1] &&
                         arr[i + 1][j - 1] == arr[i + 2][j - 2] &&
