@@ -24,16 +24,7 @@ public class Main {
             }
             Arrays.sort(tmp);
 
-            boolean isSame = true;
-
-            for (int j = 0; j < M; j++) {
-                if(tmp[j] != B[j]) {
-                    isSame = false;
-                    break;
-                }
-            }
-
-            if(isSame) {
+            if (Arrays.equals(tmp, B)) {
                 ans++;
             }
         }
