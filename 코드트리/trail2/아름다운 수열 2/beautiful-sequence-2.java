@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.Arrays;
 
 public class Main {
+    static int[] tmp;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int N = sc.nextInt();
@@ -12,33 +13,31 @@ public class Main {
         int[] B = new int[M];
         for (int i = 0; i < M; i++)
             B[i] = sc.nextInt();
+        tmp = new int[M];
+        Arrays.sort(B);
         // Please write your code here.
 
         int ans = 0;
-        boolean[] checked = new boolean[M];
         for (int i = 0; i < N - M + 1; i++) {
-            Arrays.fill(checked, false);
-            
             for (int j = 0; j < M; j++) {
-                int target = A[i + j];
-                for (int k = 0; k < M; k++) {
-                    if(target == B[k] && !checked[k]){
-                        checked[k] = true;
-                        break;
-                    }
-                }
+                tmp[j] = A[i + j];
             }
+            Arrays.sort(tmp);
 
-            boolean satisfy = true;
-            for (int k = 0; k < M; k++) {
-                if(!checked[k]){
-                    satisfy = false;
+            boolean isSame = true;
+
+            for (int j = 0; j < M; j++) {
+                if(tmp[j] != B[j]) {
+                    isSame = false;
                     break;
                 }
             }
-            if (satisfy) ans++;
-        }
 
+            if(isSame) {
+                ans++;
+            }
+        }
         System.out.println(ans);
+
     }
 }
