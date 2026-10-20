@@ -3,26 +3,31 @@ import java.util.Scanner;
 public class Main {
     static int[] dy = {0, -1, 0, 1}, dx = {1, 0, -1, 0};
     static int[][] grid;
+    static int N;
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        grid = new int[n][n];
+        N = sc.nextInt();
+        grid = new int[N][N];
         // Please write your code here.
-        int y = n / 2, x = n / 2, dir = 0;
+        int y = N / 2, x = N / 2, dir = 0, move = 1;
         grid[y][x] = 1;
 
-        for (int i = 1; i < n + 1; i++) {
-            for (int j = 0; j < 2; j++) {
-                for (int k = 1; k < i + 1; k++) {
-                    int ny = y + dy[dir] * k, nx = x + dx[dir] * k;
-                    if(ny >= n || nx >= n || ny < 0 || nx < 0 || grid[ny][nx] != 0) {
-                        continue;
-                    }
-                    grid[ny][nx] = grid[y][x] + k;
+        while (!isNotInRange(y, x)) {
+            for (int i = 0; i < move; i++) {
+                int ny = y + dy[dir], nx = x + dx[dir];
+                if (isNotInRange(ny, nx)){
+                    y = ny;
+                    x = nx;
+                    break;
                 }
-                y = y + dy[dir] * i;
-                x = x + dx[dir] * i;
-                dir = (dir + 1) % 4;
+                grid[ny][nx] = grid[y][x] + 1;
+                y = ny;
+                x = nx;
+            }
+            dir = (dir + 1) % 4;
+
+            if (dir == 0 || dir == 2) {
+                move++;
             }
         }
 
@@ -34,5 +39,9 @@ public class Main {
             ans.append("\n");
         }
         System.out.println(ans);
+    }
+    
+    static boolean isNotInRange(int y, int x) {
+        return y >= N || x >= N || y < 0 || x < 0;
     }
 }
