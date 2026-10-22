@@ -39,8 +39,6 @@ public class Main {
 
     static boolean satisfy(int a, int b, int n) {
         int temp1 = Math.min(a, b), temp2 = Math.max(a, b);
-        if((temp2 + 1) % n == temp1) return true;
-        if((temp2 + 2) % n == temp1) return true;
-        return Math.abs(temp1 - temp2) <= 2;
+        return (temp2 + 1) % n == temp1 || (temp2 + 2) % n == temp1 || Math.abs(temp1 - temp2) <= 2;
     }
 }
