@@ -15,19 +15,19 @@ public class Main {
             int temp = current;
             Arrays.fill(counts, 0);
 
+            int digits = 0;
             while (temp > 0) {
                 counts[temp % 10]++;
                 temp /= 10;
+                digits++;
             }
             
-
-            ArrayList<Integer> numbers = new ArrayList<>();
+            
+            boolean interesting = false;
             for (int i = 0; i < 10; i++) {
-                if(counts[i] > 0) numbers.add(i);
+                if(counts[i] == digits - 1) interesting = true;
             }
-
-            if(numbers.size() != 2) continue;
-            if(counts[numbers.get(0)] == 1 || counts[numbers.get(1)] == 1) ans++;
+            if (interesting) ans++;
         }
         System.out.println(ans);
     }
