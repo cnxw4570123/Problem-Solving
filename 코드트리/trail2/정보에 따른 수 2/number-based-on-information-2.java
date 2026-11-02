@@ -35,7 +35,7 @@ public class Main {
                 }
             }
 
-            if (d1 != Integer.MAX_VALUE && d2 != Integer.MAX_VALUE && d1 <= d2) {
+            if ( d1 <= d2) {
                 ans++;
             }
         }
